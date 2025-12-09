@@ -40,42 +40,43 @@ def load_genome(checkpoint_file):
 
 def draw_net(genome, view=False, filename=None, fmt='png'):
     """Draws the neural network topology using Graphviz."""
-    
+
     dot = graphviz.Digraph(format=fmt)
-    dot.attr(rankdir='TB') 
+    dot.attr(rankdir='TB')
     dot.attr(splines='true')
     dot.attr(nodesep='0.6', ranksep='0.8')
 
     # Filter enabled connections
     enabled_connections = [cg for cg in genome.connections.values() if cg.enabled]
-    
+
     # Identify active nodes (Used Inputs/Outputs + Hidden)
     active_nodes = set()
-    
+
     # Add connected nodes
     for cg in enabled_connections:
-        active_nodes.add(cg.key[0]) 
-        active_nodes.add(cg.key[1]) 
-    
-    # Always include all outputs to see the full architecture, even if disconnected
+        active_nodes.add(cg.key[0])
+        active_nodes.add(cg.key[1])
+
+    # Always include all outputs
     active_nodes.update(OUTPUT_KEYS)
-    
-    # Only include Inputs if they are actually connected
-    used_inputs = [i for i in INPUT_KEYS if i in active_nodes]
+
+    # --- DELETE OR COMMENT OUT THIS LINE ---
+    # used_inputs = [i for i in INPUT_KEYS if i in active_nodes]
 
     # --- Inputs (Top) ---
     with dot.subgraph(name='cluster_inputs') as c:
-        c.attr(rank='source') 
+        c.attr(rank='source')
         c.attr(style='invis')
-        
-        for node_id in used_inputs:
+
+        # CHANGE: Iterate over INPUT_KEYS directly, not used_inputs
+        for node_id in INPUT_KEYS:
             c.node(str(node_id), label=NODE_LABELS.get(node_id, str(node_id)), style='filled', shape='circle', fillcolor='lightgray', fontsize='10')
 
     # --- Outputs (Bottom) ---
     with dot.subgraph(name='cluster_outputs') as c:
-        c.attr(rank='sink') 
+        c.attr(rank='sink')
         c.attr(style='invis')
-        
+
         for node_id in OUTPUT_KEYS:
             c.node(str(node_id), label=NODE_LABELS.get(node_id, str(node_id)), style='filled', shape='circle', fillcolor='lightblue', fontsize='10')
 
@@ -86,13 +87,13 @@ def draw_net(genome, view=False, filename=None, fmt='png'):
 
     # --- Edges ---
     for cg in enabled_connections:
-        width = str(0.5 + abs(cg.weight)) 
+        width = str(0.5 + abs(cg.weight))
         color = 'green' if cg.weight > 0 else 'red'
-        
-        dot.edge(str(cg.key[0]), str(cg.key[1]), label=f"{cg.weight:.2f}", color=color, penwidth=width, fontsize='8')
+
+        dot.edge(str(cg.key[0]), str(cg.key[1]), color=color, penwidth=width, fontsize='8')
 
     output_path = dot.render(filename, view=view, cleanup=True)
-    
+
     return output_path
 
 def main():
