@@ -8,7 +8,8 @@ import pickle
 import gzip
 import graphviz
 import neat
-from settings import INCLUDE_VELOCITY_IN_INPUT
+
+from libs.settings import INCLUDE_VELOCITY_IN_INPUT
 
 INPUT_KEYS = [-1, -2, -3, -4, -5]   # Inputs: 5 sensors (-1 to -5).
 if INCLUDE_VELOCITY_IN_INPUT:

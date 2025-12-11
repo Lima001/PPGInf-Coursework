@@ -4,9 +4,10 @@ Manual driving simulation.
 
 import pygame
 import sys
-from settings import *
-from car import Car
-from ui import draw_interface
+
+from libs.settings import *
+from libs.car import Car
+from libs.ui import draw_interface
 
 def main():
     

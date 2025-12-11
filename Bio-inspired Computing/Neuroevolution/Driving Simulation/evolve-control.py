@@ -10,9 +10,9 @@ import pickle
 import statistics
 import cv2 
 
-from settings import *
-from car import Car
-from ui import draw_interface
+from libs.settings import *
+from libs.car import Car
+from libs.ui import draw_interface
 
 # --- Setup Directories ---
 os.makedirs(NN_CHECKPOINTS_DIR, exist_ok=True)
@@ -207,9 +207,9 @@ if __name__ == "__main__":
     # Select config file based on settings
     config_file = '' 
     if INCLUDE_VELOCITY_IN_INPUT:
-        config_file = "neat-config-feedforward-with-velocity.txt"
+        config_file = "neat-configs/feedforward-with-velocity.txt"
     else:
-        config_file = 'neat-config-feedforward.txt'
+        config_file = 'neat-configs/feedforward.txt'
     
     print(f"Starting Training")    
     run(config_file)
